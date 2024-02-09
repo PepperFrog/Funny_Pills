@@ -21,9 +21,10 @@ namespace FunnyPills
         {
             Instance = this;
             serverHandler = new ServerHandler();
-            if (Config.IsPillsEnabled)
+            Config.LoadConfigs();
+            if (Config.IsItemsEnabled)
             {
-                CustomItem.RegisterItems(overrideClass: Config.PillConfigs);
+                CustomItem.RegisterItems(overrideClass: Config.ItemConfigs);
             }
 
             ServerEvents.ReloadedConfigs += serverHandler.OnReloadingConfigs;
@@ -31,7 +32,7 @@ namespace FunnyPills
 
         public override void OnDisabled()
         {
-            if (Config.IsPillsEnabled)
+            if (Config.IsItemsEnabled)
             {
                 CustomItem.UnregisterItems();
             }

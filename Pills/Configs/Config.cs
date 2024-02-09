@@ -11,33 +11,32 @@ namespace FunnyPills
     {
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = true;
-        public bool IsPillsEnabled { get; set; } = true;
+        public bool IsItemsEnabled { get; set; } = true;
 
-        [YamlIgnore]
-        public Items PillConfigs { get; private set; } = null!;
+        [YamlIgnore] public Items ItemConfigs { get; private set; } = null!;
 
-        public string PillFolderPath { get; set; } = Path.Combine(Paths.Configs, "FunnyPills");
-        public string PillFilePath { get; set; } = "Funny_Pill.yml";
+        public string ItemFolderPath { get; set; } = Path.Combine(Paths.Configs, "FunnyPills");
+        public string ItemFilePath { get; set; } = "Funny_Pill.yml";
 
 
         public void LoadConfigs()
         {
-            if (!Directory.Exists(PillFolderPath))
-                Directory.CreateDirectory(PillFolderPath);
+            if (!Directory.Exists(ItemFolderPath))
+                Directory.CreateDirectory(ItemFolderPath);
 
-            if (IsPillsEnabled)
+            if (IsItemsEnabled)
             {
-                string PillPath = Path.Combine(PillFolderPath, PillFilePath);
-                Log.Info($"{PillPath}");
-                if (!File.Exists(PillPath))
+                string itemFilePath = Path.Combine(ItemFolderPath, ItemFilePath);
+                Log.Info($"{itemFilePath}");
+                if (!File.Exists(itemFilePath))
                 {
-                    PillConfigs = new Items();
-                    File.WriteAllText(PillPath, Loader.Serializer.Serialize(PillConfigs));
+                    ItemConfigs = new Items();
+                    File.WriteAllText(itemFilePath, Loader.Serializer.Serialize(ItemConfigs));
                 }
                 else
                 {
-                    PillConfigs = Loader.Deserializer.Deserialize<Items>(File.ReadAllText(PillPath));
-                    File.WriteAllText(PillPath, Loader.Serializer.Serialize(PillConfigs));
+                    ItemConfigs = Loader.Deserializer.Deserialize<Items>(File.ReadAllText(itemFilePath));
+                    File.WriteAllText(itemFilePath, Loader.Serializer.Serialize(ItemConfigs));
                 }
             }
         }

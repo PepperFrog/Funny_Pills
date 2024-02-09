@@ -16,7 +16,7 @@ namespace FunnyPills
     [CustomItem(ItemType.SCP500)]
     public class Scp500 : CustomItem
     {
-        public override uint Id { get; set; } = 3;
+        public override uint Id { get; set; } = 1;
 
         public override string Name { get; set; } = "Funny Pills";
 
