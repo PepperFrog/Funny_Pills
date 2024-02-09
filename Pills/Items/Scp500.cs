@@ -24,9 +24,6 @@ namespace FunnyPills
 
         public override float Weight { get; set; }
 
-        //[YamlIgnore]
-        //public static Vector3[] Spawns { get; set; } = Instance.GeneratePositions().ToArray();
-
         public override SpawnProperties? SpawnProperties { get; set; } = new()
         {
             Limit = 50,
@@ -38,14 +35,6 @@ namespace FunnyPills
                 Location = SpawnLocationManager.GetRandomSpawnLocation()
                 },
             },
-            /*StaticSpawnPoints = new List<StaticSpawnPoint>
-            {
-                new()
-                {
-                    Chance = 100,
-                    Position =  Spawns.First()
-                },
-            },*/
         };
 
         protected override void SubscribeEvents()
