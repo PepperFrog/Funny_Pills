@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
+﻿using System.IO;
 using Exiled.API.Features;
 using Exiled.API.Interfaces;
-using Exiled.CustomItems.API.Features;
 using Exiled.Loader;
 
 using YamlDotNet.Serialization;
@@ -18,7 +14,7 @@ namespace FunnyPills
         public bool IsPillsEnabled { get; set; } = true;
 
         [YamlIgnore]
-        public Pills PillConfigs { get; private set; } = null!;
+        public Items PillConfigs { get; private set; } = null!;
 
         public string PillFolderPath { get; set; } = Path.Combine(Paths.Configs, "FunnyPills");
         public string PillFilePath { get; set; } = "Funny_Pill.yml";
@@ -35,12 +31,12 @@ namespace FunnyPills
                 Log.Info($"{PillPath}");
                 if (!File.Exists(PillPath))
                 {
-                    PillConfigs = new Pills();
+                    PillConfigs = new Items();
                     File.WriteAllText(PillPath, Loader.Serializer.Serialize(PillConfigs));
                 }
                 else
                 {
-                    PillConfigs = Loader.Deserializer.Deserialize<Pills>(File.ReadAllText(PillPath));
+                    PillConfigs = Loader.Deserializer.Deserialize<Items>(File.ReadAllText(PillPath));
                     File.WriteAllText(PillPath, Loader.Serializer.Serialize(PillConfigs));
                 }
             }

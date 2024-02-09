@@ -1,6 +1,4 @@
-﻿using FunnyPills;
-
-namespace FunnyPills
+﻿namespace FunnyPills
 {
     public class ServerHandler
     {

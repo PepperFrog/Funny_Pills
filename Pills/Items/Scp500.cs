@@ -1,34 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
-using Exiled.API.Features.Items;
-using Exiled.API.Features.Pickups;
 using Exiled.API.Features.Spawn;
+using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Player;
-
-using MEC;
-
 using YamlDotNet.Serialization;
-using UnityEngine;
 using System;
-using Exiled.API.Extensions;
-using Mirror;
-using System.IO;
-using NVorbis;
-using PlayerStatsSystem;
-using PluginAPI.Enums;
-using UnityEngine.Networking.Types;
-using AdminTools.Commands.Kill;
-using AdminTools.Commands.Jail;
 using Random = System.Random;
 using PlayerRoles;
 using System.Linq;
 using CustomPlayerEffects;
-using AdminTools.Commands.Position;
-using Exiled.CustomItems.API.Features;
-
 namespace FunnyPills
 {
     [CustomItem(ItemType.SCP500)]
@@ -55,102 +37,15 @@ namespace FunnyPills
                 Chance = 50,
                 Location = SpawnLocationManager.GetRandomSpawnLocation()
                 },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
-                new()
-                {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
-                },
             },
+            /*StaticSpawnPoints = new List<StaticSpawnPoint>
+            {
+                new()
+                {
+                    Chance = 100,
+                    Position =  Spawns.First()
+                },
+            },*/
         };
 
         protected override void SubscribeEvents()
@@ -178,36 +73,39 @@ namespace FunnyPills
         }
         protected void OnUsedItem(UsedItemEventArgs ev)
         {
-            var effects = Enum.GetValues(typeof(Effects));
-            var randomEffect = (Effects)effects.GetValue(new Random().Next(effects.Length));
-            if (ev.Item.Type == ItemType.SCP500)
+            if (Check(ev.Item))
             {
-                switch (randomEffect)
+                var effects = Enum.GetValues(typeof(Effects));
+                var randomEffect = (Effects)effects.GetValue(new Random().Next(effects.Length));
+                if (ev.Item.Type == ItemType.SCP500)
                 {
-                    case Effects.AllSpec:
-                        //revive  all spec
-                        ApplyAllSpecEffect(ev.Player);
-                        break;
-                    case Effects.OneSpec:
-                        //revive one spec
-                        ApplyOneSpecEffect(ev.Player);
-                        break;
-                    case Effects.Add5MoveBoost:
-                        //add 25 movement boost (Limit is 100)
-                        ApplyAdd5MoveBoostEffect(ev.Player);
-                        break;
-                    case Effects.Die:
-                        //vaporize the player
-                        ApplyDieEffect(ev.Player);
-                        break;
-                    case Effects.BetrayTeam:
-                        //betray the team and switch sides
-                        ApplyBetrayTeamEffect(ev.Player);
-                        break;
-                    case Effects.AddRandomEffect:
-                        //add a random effect to the player WIP
-                        ApplyRandomEffect(ev.Player);
+                    switch (randomEffect)
+                    {
+                        case Effects.AllSpec:
+                            //revive  all spec
+                            ApplyAllSpecEffect(ev.Player);
                             break;
+                        case Effects.OneSpec:
+                            //revive one spec
+                            ApplyOneSpecEffect(ev.Player);
+                            break;
+                        case Effects.Add5MoveBoost:
+                            //add 25 movement boost (Limit is 100)
+                            ApplyAdd5MoveBoostEffect(ev.Player);
+                            break;
+                        case Effects.Die:
+                            //vaporize the player
+                            ApplyDieEffect(ev.Player);
+                            break;
+                        case Effects.BetrayTeam:
+                            //betray the team and switch sides
+                            ApplyBetrayTeamEffect(ev.Player);
+                            break;
+                        case Effects.AddRandomEffect:
+                            //add a random effect to the player WIP
+                            ApplyRandomEffect(ev.Player);
+                            break;
+                    }
                 }
             }
 
@@ -218,7 +116,7 @@ namespace FunnyPills
         {
             foreach (var p in Player.List)
             {
-                
+
                 if (p.Role.Type == RoleTypeId.Spectator)
                 {
                     RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
