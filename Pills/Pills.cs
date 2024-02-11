@@ -13,7 +13,7 @@ namespace FunnyPills
         public override string Author => "TagGodOnYT";
 
         public override Version RequiredExiledVersion { get; } = new(8, 0, 0);
-        public override Version Version { get; } = new(1, 2, 0);
+        public override Version Version { get; } = new(1, 3, 0);
 
         private ServerHandler serverHandler = null!;
 

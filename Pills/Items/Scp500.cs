@@ -11,6 +11,7 @@ using Random = System.Random;
 using PlayerRoles;
 using System.Linq;
 using CustomPlayerEffects;
+using Exiled.API.Features.Items;
 namespace FunnyPills
 {
     [CustomItem(ItemType.SCP500)]
@@ -36,6 +37,10 @@ namespace FunnyPills
                 },
             },
         };
+        public bool AffecAll500s { get; set; } = false;
+        public int MaxPlayerScale { get; set; } = 10;
+        public int MinPlayerScale { get; set; } = 5;
+
 
         protected override void SubscribeEvents()
         {
@@ -62,37 +67,89 @@ namespace FunnyPills
         }
         protected void OnUsedItem(UsedItemEventArgs ev)
         {
-            if (Check(ev.Item))
+            if ((Check(ev.Item) && AffecAll500s == false) || AffecAll500s == true)
             {
                 var effects = Enum.GetValues(typeof(Effects));
                 var randomEffect = (Effects)effects.GetValue(new Random().Next(effects.Length));
+
+                Random random = new Random();
+                int chance = random.Next(1, 1000);
+
                 if (ev.Item.Type == ItemType.SCP500)
                 {
                     switch (randomEffect)
                     {
                         case Effects.AllSpec:
-                            //revive  all spec
-                            ApplyAllSpecEffect(ev.Player);
+                            if (chance <= 525 && chance > 500)
+                            {
+                                ApplyAllSpecEffect(ev.Player);
+                            }
                             break;
                         case Effects.OneSpec:
-                            //revive one spec
-                            ApplyOneSpecEffect(ev.Player);
+                            if (chance <= 500 && chance > 450)
+                            {
+                                ApplyOneSpecEffect(ev.Player);
+                            }
                             break;
                         case Effects.Add5MoveBoost:
-                            //add 25 movement boost (Limit is 100)
-                            ApplyAdd5MoveBoostEffect(ev.Player);
+                            if (chance <= 450 && chance > 350)
+                            {
+                                ApplyAdd5MoveBoostEffect(ev.Player);
+                            }
                             break;
                         case Effects.Die:
-                            //vaporize the player
-                            ApplyDieEffect(ev.Player);
+                            if (chance <= 350 && chance > 300)
+                            {
+                                ApplyDieEffect(ev.Player);
+                            }
                             break;
                         case Effects.BetrayTeam:
-                            //betray the team and switch sides
-                            ApplyBetrayTeamEffect(ev.Player);
+                            if (chance <= 700 && chance > 525)
+                            {
+                                ApplyBetrayTeamEffect(ev.Player);
+                            }
                             break;
-                        case Effects.AddRandomEffect:
-                            //add a random effect to the player WIP
-                            ApplyRandomEffect(ev.Player);
+                        case Effects.AddRandomGoodEffect:
+                            if (chance <= 300 && chance > 150)
+                            {
+                                ApplyRandomEffect(ev.Player, false);
+                            }
+                            break;
+                        case Effects.AddRandomBadEffect:
+                            if (chance <= 150 && chance > 50)
+                            {
+                                ApplyRandomEffect(ev.Player, true);
+                            }
+                            break;
+                        case Effects.StartTheFuckingNuke:
+                            if (chance <= 10 && chance > 1)
+                            {
+                                StartTheNuke();
+                            }
+                            break;
+                        case Effects.ReplaceInventory:
+                            if (chance <= 50 && chance > 11)
+                            {
+                                ReplacePlayerInventory(ev.Player);
+                            }
+                            break;
+                        case Effects.SizeChange:
+                            if (chance <= 800 && chance > 700)
+                            {
+                                ChangePlayerSize(ev.Player);
+                            }
+                            break;
+                        case Effects.Kaboom:
+                            if (chance <= 850 && chance > 800)
+                            {
+                                TriggerExplosion(ev.Player);
+                            }
+                            break;
+                        case Effects.Blackout:
+                            if (chance <= 1000 && chance > 850)
+                            {
+                                CauseBlackout();
+                            }
                             break;
                     }
                 }
@@ -146,6 +203,7 @@ namespace FunnyPills
                 {
                     intensity += 25;
                     player.ShowHint("<color=green>You Have Gained +25% Movement Speed</color>");
+                    player.ChangeEffectIntensity<MovementBoost>(intensity);
                 }
                 else
                 {
@@ -164,9 +222,51 @@ namespace FunnyPills
             player.Vaporize(player);
         }
 
-        private void ApplyRandomEffect(Player player)
+        private void ApplyRandomEffect(Player player, bool IsBad)
         {
-            player.ApplyRandomEffect(EffectCategory.Positive, 255, 90);
+            if (!IsBad)
+            {
+                player.ApplyRandomEffect(EffectCategory.Positive, 255, 90);
+            }
+            else if (IsBad)
+            {
+                player.ApplyRandomEffect(EffectCategory.Negative, 255, 90);
+            }
+        }
+
+        private void StartTheNuke()
+        {
+            Warhead.Start();
+        }
+
+        private void ReplacePlayerInventory(Player player)
+        {
+            Random random = new Random();
+            var itemTypes = Enum.GetValues(typeof(ItemType));
+            var randomItemType = (ItemType)itemTypes.GetValue(random.Next(itemTypes.Length));
+
+            player.ClearInventory();
+            player.AddItem(randomItemType, 8);
+        }
+
+        private void ChangePlayerSize(Player player)
+        {
+            Random random = new Random();
+            var newScale = random.Next(MinPlayerScale, MaxPlayerScale)/10;
+            player.Scale = new UnityEngine.Vector3(newScale, newScale, newScale);
+        }
+
+        private void TriggerExplosion(Player player)
+        {
+            var pos = player.Position;
+            ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE);
+            grenade.FuseTime = 0.5f;
+            grenade.SpawnActive(pos);
+        }
+
+        private void CauseBlackout()
+        {
+            Map.TurnOffAllLights(15, ZoneType.Unspecified);
         }
 
         private void ApplyBetrayTeamEffect(Player player)
@@ -197,7 +297,16 @@ namespace FunnyPills
             Add5MoveBoost,
             Die,
             BetrayTeam,
-            AddRandomEffect
+            AddRandomGoodEffect,
+            AddRandomBadEffect,
+            StartTheFuckingNuke,
+            ReplaceInventory,
+            SizeChange,
+            Kaboom,
+            Blackout,
+            From,
+            To,
+            RandomItem
         }
     }
 }
