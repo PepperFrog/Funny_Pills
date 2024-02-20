@@ -77,51 +77,51 @@ namespace FunnyPills
 
                 if (ev.Item.Type == ItemType.SCP500)
                 {
-                    if (chance <= 525 && chance > 500)
-                    {
-                        ApplyAllSpecEffect(ev.Player);
-                    }
-                    if (chance <= 500 && chance > 450)
-                    {
-                        ApplyOneSpecEffect(ev.Player);
-                    }
-                    if (chance <= 450 && chance > 350)
-                    {
-                        ApplyAdd5MoveBoostEffect(ev.Player);
-                    }
-                    if (chance <= 350 && chance > 300)
-                    {
-                        ApplyDieEffect(ev.Player);
-                    }
-                    if (chance <= 700 && chance > 525)
-                    {
-                        ApplyBetrayTeamEffect(ev.Player);
-                    }
-                    if (chance <= 300 && chance > 150)
-                    {
-                        ApplyRandomEffect(ev.Player, false);
-                    }
-                    if (chance <= 150 && chance > 50)
-                    {
-                        ApplyRandomEffect(ev.Player, true);
-                    }
-                    if (chance <= 10 && chance > 1)
+                    if (chance <= 10 && chance >= 1)
                     {
                         StartTheNuke();
                     }
-                    if (chance <= 50 && chance > 11)
+                    else if (chance <= 50 && chance > 11)
                     {
                         ReplacePlayerInventory(ev.Player);
                     }
-                    if (chance <= 800 && chance > 700)
+                    else if (chance <= 150 && chance > 50)
+                    {
+                        ApplyRandomEffect(ev.Player, true);
+                    }
+                    else if (chance <= 300 && chance > 150)
+                    {
+                        ApplyRandomEffect(ev.Player, false);
+                    }
+                    else if (chance <= 350 && chance > 300)
+                    {
+                        ApplyDieEffect(ev.Player);
+                    }
+                    else if (chance <= 450 && chance > 350)
+                    {
+                        ApplyAdd5MoveBoostEffect(ev.Player);
+                    }
+                    else if (chance <= 500 && chance > 450)
+                    {
+                        ApplyOneSpecEffect(ev.Player);
+                    }
+                    else if (chance <= 525 && chance > 500)
+                    {
+                        ApplyAllSpecEffect(ev.Player);
+                    }
+                    else if (chance <= 700 && chance > 525)
+                    {
+                        ApplyBetrayTeamEffect(ev.Player);
+                    }
+                    else if (chance <= 800 && chance > 700)
                     {
                         ChangePlayerSize(ev.Player);
                     }
-                    if (chance <= 850 && chance > 800)
+                    else if (chance <= 850 && chance > 800)
                     {
                         TriggerExplosion(ev.Player);
                     }
-                    if (chance <= 1000 && chance > 850)
+                    else if (chance <= 1000 && chance > 850)
                     {
                         CauseBlackout();
                     }
