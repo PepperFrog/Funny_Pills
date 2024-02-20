@@ -67,7 +67,7 @@ namespace FunnyPills
         }
         protected void OnUsedItem(UsedItemEventArgs ev)
         {
-            if ((Check(ev.Item) && AffecAll500s == false) || AffecAll500s == true)
+            if (Check(ev.Item) || AffecAll500s == true)
             {
                 var effects = Enum.GetValues(typeof(Effects));
                 var randomEffect = (Effects)effects.GetValue(new Random().Next(effects.Length));
@@ -77,80 +77,53 @@ namespace FunnyPills
 
                 if (ev.Item.Type == ItemType.SCP500)
                 {
-                    switch (randomEffect)
+                    if (chance <= 525 && chance > 500)
                     {
-                        case Effects.AllSpec:
-                            if (chance <= 525 && chance > 500)
-                            {
-                                ApplyAllSpecEffect(ev.Player);
-                            }
-                            break;
-                        case Effects.OneSpec:
-                            if (chance <= 500 && chance > 450)
-                            {
-                                ApplyOneSpecEffect(ev.Player);
-                            }
-                            break;
-                        case Effects.Add5MoveBoost:
-                            if (chance <= 450 && chance > 350)
-                            {
-                                ApplyAdd5MoveBoostEffect(ev.Player);
-                            }
-                            break;
-                        case Effects.Die:
-                            if (chance <= 350 && chance > 300)
-                            {
-                                ApplyDieEffect(ev.Player);
-                            }
-                            break;
-                        case Effects.BetrayTeam:
-                            if (chance <= 700 && chance > 525)
-                            {
-                                ApplyBetrayTeamEffect(ev.Player);
-                            }
-                            break;
-                        case Effects.AddRandomGoodEffect:
-                            if (chance <= 300 && chance > 150)
-                            {
-                                ApplyRandomEffect(ev.Player, false);
-                            }
-                            break;
-                        case Effects.AddRandomBadEffect:
-                            if (chance <= 150 && chance > 50)
-                            {
-                                ApplyRandomEffect(ev.Player, true);
-                            }
-                            break;
-                        case Effects.StartTheFuckingNuke:
-                            if (chance <= 10 && chance > 1)
-                            {
-                                StartTheNuke();
-                            }
-                            break;
-                        case Effects.ReplaceInventory:
-                            if (chance <= 50 && chance > 11)
-                            {
-                                ReplacePlayerInventory(ev.Player);
-                            }
-                            break;
-                        case Effects.SizeChange:
-                            if (chance <= 800 && chance > 700)
-                            {
-                                ChangePlayerSize(ev.Player);
-                            }
-                            break;
-                        case Effects.Kaboom:
-                            if (chance <= 850 && chance > 800)
-                            {
-                                TriggerExplosion(ev.Player);
-                            }
-                            break;
-                        case Effects.Blackout:
-                            if (chance <= 1000 && chance > 850)
-                            {
-                                CauseBlackout();
-                            }
-                            break;
+                        ApplyAllSpecEffect(ev.Player);
+                    }
+                    if (chance <= 500 && chance > 450)
+                    {
+                        ApplyOneSpecEffect(ev.Player);
+                    }
+                    if (chance <= 450 && chance > 350)
+                    {
+                        ApplyAdd5MoveBoostEffect(ev.Player);
+                    }
+                    if (chance <= 350 && chance > 300)
+                    {
+                        ApplyDieEffect(ev.Player);
+                    }
+                    if (chance <= 700 && chance > 525)
+                    {
+                        ApplyBetrayTeamEffect(ev.Player);
+                    }
+                    if (chance <= 300 && chance > 150)
+                    {
+                        ApplyRandomEffect(ev.Player, false);
+                    }
+                    if (chance <= 150 && chance > 50)
+                    {
+                        ApplyRandomEffect(ev.Player, true);
+                    }
+                    if (chance <= 10 && chance > 1)
+                    {
+                        StartTheNuke();
+                    }
+                    if (chance <= 50 && chance > 11)
+                    {
+                        ReplacePlayerInventory(ev.Player);
+                    }
+                    if (chance <= 800 && chance > 700)
+                    {
+                        ChangePlayerSize(ev.Player);
+                    }
+                    if (chance <= 850 && chance > 800)
+                    {
+                        TriggerExplosion(ev.Player);
+                    }
+                    if (chance <= 1000 && chance > 850)
+                    {
+                        CauseBlackout();
                     }
                 }
             }
