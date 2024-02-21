@@ -38,6 +38,23 @@ namespace FunnyPills
             },
         };
         public bool AffecAll500s { get; set; } = false;
+
+        public Dictionary<Effects, (int MinimumChance, int MaximumChance)> EffectChances { get; set; } = new Dictionary<Effects, (int, int)>
+        {
+            { Effects.StartTheFuckingNuke, (1, 10) },
+            { Effects.ReplaceInventory, (11, 50) },
+            { Effects.AddRandomGoodEffect, (51, 150) },
+            { Effects.AddRandomBadEffect, (151, 300) },
+            { Effects.Die, (301, 350) },
+            { Effects.Add5MoveBoost, (351, 450) },
+            { Effects.OneSpec, (451, 500) },
+            { Effects.AllSpec, (501, 525) },
+            { Effects.BetrayTeam, (526, 700) },
+            { Effects.SizeChange, (701, 800) },
+            { Effects.Kaboom, (801, 850) },
+            { Effects.Blackout, (851, 1000) }
+        };
+
         public int MaxPlayerScale { get; set; } = 10;
         public int MinPlayerScale { get; set; } = 5;
 
@@ -67,68 +84,68 @@ namespace FunnyPills
         }
         protected void OnUsedItem(UsedItemEventArgs ev)
         {
-            if (Check(ev.Item) || AffecAll500s == true)
+            if (Check(ev.Item) || AffecAll500s)
             {
-                var effects = Enum.GetValues(typeof(Effects));
-                var randomEffect = (Effects)effects.GetValue(new Random().Next(effects.Length));
-
-                Random random = new Random();
-                int chance = random.Next(1, 1000);
-
+                Log.Debug("Passed FP Check");
                 if (ev.Item.Type == ItemType.SCP500)
                 {
-                    if (chance <= 10 && chance >= 1)
+                    Random random = new Random();
+                    int chance = random.Next(1, 1000);
+
+                    foreach (var efctDict in EffectChances)
                     {
-                        StartTheNuke();
-                    }
-                    else if (chance <= 50 && chance > 11)
-                    {
-                        ReplacePlayerInventory(ev.Player);
-                    }
-                    else if (chance <= 150 && chance > 50)
-                    {
-                        ApplyRandomEffect(ev.Player, true);
-                    }
-                    else if (chance <= 300 && chance > 150)
-                    {
-                        ApplyRandomEffect(ev.Player, false);
-                    }
-                    else if (chance <= 350 && chance > 300)
-                    {
-                        ApplyDieEffect(ev.Player);
-                    }
-                    else if (chance <= 450 && chance > 350)
-                    {
-                        ApplyAdd5MoveBoostEffect(ev.Player);
-                    }
-                    else if (chance <= 500 && chance > 450)
-                    {
-                        ApplyOneSpecEffect(ev.Player);
-                    }
-                    else if (chance <= 525 && chance > 500)
-                    {
-                        ApplyAllSpecEffect(ev.Player);
-                    }
-                    else if (chance <= 700 && chance > 525)
-                    {
-                        ApplyBetrayTeamEffect(ev.Player);
-                    }
-                    else if (chance <= 800 && chance > 700)
-                    {
-                        ChangePlayerSize(ev.Player);
-                    }
-                    else if (chance <= 850 && chance > 800)
-                    {
-                        TriggerExplosion(ev.Player);
-                    }
-                    else if (chance <= 1000 && chance > 850)
-                    {
-                        CauseBlackout();
+                        if (chance >= efctDict.Value.MinimumChance && chance <= efctDict.Value.MaximumChance)
+                        {
+                            Log.Warn($"FP Returned {efctDict.Key}");
+                            ApplyEffect(ev.Player, efctDict.Key);
+                            break;
+                        }
                     }
                 }
             }
+        }
 
-
+        private void ApplyEffect(Player player, Effects effect)
+        {
+            switch (effect)
+            {
+                case Effects.StartTheFuckingNuke:
+                    StartTheNuke();
+                    break;
+                case Effects.ReplaceInventory:
+                    ReplacePlayerInventory(player);
+                    break;
+                case Effects.AddRandomGoodEffect:
+                    ApplyRandomEffect(player, true);
+                    break;
+                case Effects.AddRandomBadEffect:
+                    ApplyRandomEffect(player, false);
+                    break;
+                case Effects.Die:
+                    ApplyDieEffect(player);
+                    break;
+                case Effects.Add5MoveBoost:
+                    ApplyAdd5MoveBoostEffect(player);
+                    break;
+                case Effects.OneSpec:
+                    ApplyOneSpecEffect(player);
+                    break;
+                case Effects.AllSpec:
+                    ApplyAllSpecEffect(player);
+                    break;
+                case Effects.BetrayTeam:
+                    ApplyBetrayTeamEffect(player);
+                    break;
+                case Effects.SizeChange:
+                    ChangePlayerSize(player);
+                    break;
+                case Effects.Kaboom:
+                    TriggerExplosion(player);
+                    break;
+                case Effects.Blackout:
+                    CauseBlackout();
+                    break;
+            }
         }
 
         private void ApplyAllSpecEffect(Player player)
@@ -141,8 +158,8 @@ namespace FunnyPills
                     RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
                     p.RoleManager.ServerSetRole(player.Role, RoleChangeReason.Revived, spawnFlags);
                     p.Teleport(player.Position);
-                    player.ShowHint("You Have Revived All Spectators", 5);
-                    p.ShowHint("You Have Been Revived By " + player.Nickname, 5);
+                    player.Broadcast(5, "You Have Revived All Spectators");
+                    p.Broadcast(5, $"You Have Been Revived By {player.Nickname}");
                 }
             }
         }
@@ -160,8 +177,8 @@ namespace FunnyPills
             var selectedSpectator = spectators[random.Next(spectators.Count)];
             RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
 
-            player.ShowHint("You Have Revived A Spectator", 5);
-            selectedSpectator.ShowHint("You Have Been Revived By " + player.Nickname, 5);
+            player.Broadcast(5, "You Have Revived A Spectator");
+            selectedSpectator.Broadcast(5, "You Have Been Revived By " + player.Nickname);
 
             selectedSpectator.RoleManager.ServerSetRole(player.Role, RoleChangeReason.Revived, spawnFlags);
             selectedSpectator.Teleport(player.Position);
@@ -175,7 +192,7 @@ namespace FunnyPills
                 if (intensity < 100)
                 {
                     intensity += 25;
-                    player.ShowHint("<color=green>You Have Gained +25% Movement Speed</color>");
+                    player.Broadcast(5, "<color=green>You Have Gained +25% Movement Speed</color>");
                     player.ChangeEffectIntensity<MovementBoost>(intensity);
                 }
                 else
@@ -186,12 +203,14 @@ namespace FunnyPills
             else
             {
                 player.EnableEffect<MovementBoost>();
-                player.ShowHint("<color=green>You Have Gained A 25% Movement Boost</color>");
+                player.Broadcast(5, "<color=green>You Have Gained A 25% Movement Boost</color>");
             }
         }
 
         private void ApplyDieEffect(Player player)
         {
+            player.Broadcast(5, "<color=red>You F***ed Around And Found Out...</color>");
+
             player.Vaporize(player);
         }
 
@@ -200,10 +219,15 @@ namespace FunnyPills
             if (!IsBad)
             {
                 player.ApplyRandomEffect(EffectCategory.Positive, 255, 90);
+                player.Broadcast(5, "<color=green>You Feel Stronger</color>");
+
+
             }
             else if (IsBad)
             {
                 player.ApplyRandomEffect(EffectCategory.Negative, 255, 90);
+                player.Broadcast(5, "<color=green>You Feel Weaker</color>");
+
             }
         }
 
@@ -220,6 +244,7 @@ namespace FunnyPills
 
             player.ClearInventory();
             player.AddItem(randomItemType, 8);
+            player.Broadcast(5, $"Your Inventory Has Been Replaced By <color=red>{randomItemType}</color>.");
         }
 
         private void ChangePlayerSize(Player player)
@@ -227,10 +252,13 @@ namespace FunnyPills
             Random random = new Random();
             var newScale = random.Next(MinPlayerScale, MaxPlayerScale)/10;
             player.Scale = new UnityEngine.Vector3(newScale, newScale, newScale);
+            string sizeMessage = player.Scale.x < 1.0f ? "Shorter" : "Taller";
+            player.Broadcast(5, $"<color=green>You Begin To Feel {sizeMessage}</color>");
         }
 
         private void TriggerExplosion(Player player)
         {
+            player.Broadcast(5, "<color=green>Kaboom</color>");
             var pos = player.Position;
             ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE);
             grenade.FuseTime = 0.5f;
@@ -244,6 +272,7 @@ namespace FunnyPills
 
         private void ApplyBetrayTeamEffect(Player player)
         {
+            player.Broadcast(5, "<color=red>You Let Your Intrusive Thoughts Win, And Betrayed Your Comrades In Battle</color>.");
             if (player.Role == RoleTypeId.NtfCaptain || player.Role == RoleTypeId.NtfSergeant || player.Role == RoleTypeId.NtfPrivate || player.Role == RoleTypeId.NtfSpecialist)
             {
                 player.RoleManager.ServerSetRole(RoleTypeId.ChaosConscript, RoleChangeReason.Revived, RoleSpawnFlags.None);
