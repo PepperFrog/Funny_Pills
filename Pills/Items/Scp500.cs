@@ -20,7 +20,6 @@ namespace FunnyPills
         public override uint Id { get; set; } = 1;
 
         public override string Name { get; set; } = "Funny Pills";
-
         public override string Description { get; set; } = "Do Something Fun When Eaten";
 
         public override float Weight { get; set; }
@@ -39,20 +38,20 @@ namespace FunnyPills
         };
         public bool AffecAll500s { get; set; } = false;
 
-        public Dictionary<Effects, (int MinimumChance, int MaximumChance)> EffectChances { get; set; } = new Dictionary<Effects, (int, int)>
+        public Dictionary<Effects, Chance> EffectChances { get; set; } = new Dictionary<Effects, Chance>
         {
-            { Effects.StartTheFuckingNuke, (1, 10) },
-            { Effects.ReplaceInventory, (11, 50) },
-            { Effects.AddRandomGoodEffect, (51, 150) },
-            { Effects.AddRandomBadEffect, (151, 300) },
-            { Effects.Die, (301, 350) },
-            { Effects.Add5MoveBoost, (351, 450) },
-            { Effects.OneSpec, (451, 500) },
-            { Effects.AllSpec, (501, 525) },
-            { Effects.BetrayTeam, (526, 700) },
-            { Effects.SizeChange, (701, 800) },
-            { Effects.Kaboom, (801, 850) },
-            { Effects.Blackout, (851, 1000) }
+            { Effects.StartTheFuckingNuke, new Chance(1, 10)},
+            { Effects.ReplaceInventory, new Chance(11, 50) },
+            { Effects.AddRandomGoodEffect, new Chance(51, 150) },
+            { Effects.AddRandomBadEffect, new Chance(151, 300) },
+            { Effects.Die, new Chance(301, 350) },
+            { Effects.Add5MoveBoost, new Chance(351, 450) },
+            { Effects.OneSpec, new Chance(451, 500) },
+            { Effects.AllSpec, new Chance(501, 525) },
+            { Effects.BetrayTeam, new Chance(526, 700) },
+            { Effects.SizeChange, new Chance(701, 800) },
+            { Effects.Kaboom, new Chance(801, 850) },
+            { Effects.Blackout, new Chance(851, 1000) }
         };
 
         public int MaxPlayerScale { get; set; } = 10;
@@ -170,15 +169,15 @@ namespace FunnyPills
 
             if (spectators.Count == 0)
             {
-                return;
+                Log.Warn("No Spectators To Revive");
             }
 
             var random = new System.Random();
             var selectedSpectator = spectators[random.Next(spectators.Count)];
+            player.Broadcast(5, $"You Have Revived {selectedSpectator.Nickname}");
             RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
 
-            player.Broadcast(5, "You Have Revived A Spectator");
-            selectedSpectator.Broadcast(5, "You Have Been Revived By " + player.Nickname);
+            selectedSpectator.Broadcast(5, $"You Have Been Revived By {player.Nickname}");
 
             selectedSpectator.RoleManager.ServerSetRole(player.Role, RoleChangeReason.Revived, spawnFlags);
             selectedSpectator.Teleport(player.Position);

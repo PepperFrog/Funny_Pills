@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Items\Chance.cs" />
     <Compile Include="Pills.cs" />
     <Compile Include="Configs\Config.cs" />
     <Compile Include="Configs\Items.cs" />
