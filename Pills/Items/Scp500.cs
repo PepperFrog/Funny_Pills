@@ -328,7 +328,7 @@ namespace FunnyPills
         {
             player.Broadcast(5, "Tu a de la chance");
 
-            player.EnableEffect(EffectType.Invisible, 1 , 35f);
+            player.EnableEffect(EffectType.Invisible, 1 , 15f);
         }
 
         private void CauseBlackout()
