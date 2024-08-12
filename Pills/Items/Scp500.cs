@@ -12,6 +12,10 @@ using PlayerRoles;
 using System.Linq;
 using CustomPlayerEffects;
 using Exiled.API.Features.Items;
+using Exiled.Events.EventArgs.Scp079;
+using MEC;
+using UnityEngine;
+
 namespace FunnyPills
 {
     [CustomItem(ItemType.SCP500)]
@@ -51,7 +55,8 @@ namespace FunnyPills
             { Effects.BetrayTeam, new Chance(526, 700) },
             { Effects.SizeChange, new Chance(701, 800) },
             { Effects.Kaboom, new Chance(801, 850) },
-            { Effects.Blackout, new Chance(851, 1000) }
+            { Effects.Blackout, new Chance(851, 1000) },
+            { Effects.invisible, new Chance(10, 35) }
         };
 
         public int MaxPlayerScale { get; set; } = 10;
@@ -144,6 +149,9 @@ namespace FunnyPills
                 case Effects.Blackout:
                     CauseBlackout();
                     break;
+                case Effects.invisible:
+                    Invisible(player);
+                    break;
             }
         }
 
@@ -205,7 +213,7 @@ namespace FunnyPills
                 player.Broadcast(5, "<color=green>You Have Gained A 25% Movement Boost</color>");
             }
         }
-
+        
         private void ApplyDieEffect(Player player)
         {
             player.Broadcast(5, "<color=red>You F***ed Around And Found Out...</color>");
@@ -258,10 +266,27 @@ namespace FunnyPills
         private void TriggerExplosion(Player player)
         {
             player.Broadcast(5, "<color=green>Kaboom</color>");
+            _coroutine = Timing.RunCoroutine(Kaboomm(player));
+            Timing.WaitForSeconds(32);
+            Timing.KillCoroutines(_coroutine);
+        }
+
+        private CoroutineHandle _coroutine;
+        private IEnumerator<float> Kaboomm(Player player)
+        {
+            Timing.WaitForSeconds(30f);
             var pos = player.Position;
             ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE);
             grenade.FuseTime = 0.5f;
             grenade.SpawnActive(pos);
+            yield break;
+        }
+
+        private void Invisible(Player player)
+        {
+            player.Broadcast(5, "Tu a de la chance");
+
+            player.EnableEffect(EffectType.Invisible, 1 , 35f);
         }
 
         private void CauseBlackout()
@@ -307,7 +332,8 @@ namespace FunnyPills
             Blackout,
             From,
             To,
-            RandomItem
+            RandomItem,
+            invisible
         }
     }
 }
