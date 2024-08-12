@@ -63,7 +63,8 @@ namespace FunnyPills
             { Effects.Dimension106, new Chance(100, 450)},
             { Effects.Inventory, new Chance(200, 451)},
             { Effects.Teleport, new Chance(50, 100) },
-            { Effects.CuffPlayer, new Chance(1, 5)}
+            { Effects.CuffPlayer, new Chance(1, 5)},
+            { Effects.MovementBoost, new Chance(100, 200) }
         };
 
         public int MaxPlayerScale { get; set; } = 10;
@@ -122,6 +123,15 @@ namespace FunnyPills
             player.EnableEffect(EffectType.PocketCorroding);
         }
 
+        public IEnumerator<float> MovementBost(Player player)
+        {
+            player.Broadcast(5, "Tu a de la chance mais plus pour longtemps");
+            player.EnableEffect(EffectType.MovementBoost, 125, 30f);
+            Timing.WaitForSeconds(20f);
+            player.Kill("Tu a utilisé tous le carburant");
+            yield break;
+        }
+
         private void ApplyEffect(Player player, Effects effect)
         {
             switch (effect)
@@ -176,6 +186,9 @@ namespace FunnyPills
                     break;
                 case Effects.CuffPlayer:
                     CuffPlayer(player);
+                    break;
+                case Effects.MovementBoost:
+                    MovementBost(player);
                     break;
             }
         }
@@ -386,7 +399,8 @@ namespace FunnyPills
             Dimension106,
             Inventory,
             Teleport,
-            CuffPlayer
+            CuffPlayer,
+            MovementBoost
         }
     }
 }
