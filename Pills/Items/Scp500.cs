@@ -10,6 +10,7 @@ using System;
 using Random = System.Random;
 using PlayerRoles;
 using System.Linq;
+using System.Security.Policy;
 using CustomPlayerEffects;
 using Exiled.API.Features.Items;
 using Exiled.Events.EventArgs.Scp079;
@@ -56,10 +57,12 @@ namespace FunnyPills
             { Effects.BetrayTeam, new Chance(526, 700) },
             { Effects.SizeChange, new Chance(701, 800) },
             { Effects.Kaboom, new Chance(801, 850) },
-            { Effects.Blackout, new Chance(851, 1000) },
+            { Effects.Blackout, new Chance(851, 1000)},
             { Effects.invisible, new Chance(10, 35) },
             { Effects.Dimension106, new Chance(100, 450)},
-            { Effects.Inventory, new Chance(200, 451)}
+            { Effects.Inventory, new Chance(200, 451)},
+            { Effects.Teleport, new Chance(50, 100) },
+            { Effects.CuffPlayer, new Chance(1, 5)}
         };
 
         public int MaxPlayerScale { get; set; } = 10;
@@ -167,6 +170,12 @@ namespace FunnyPills
                 case Effects.Dimension106:
                     Dimension106(player);
                     break;
+                case Effects.Teleport:
+                    Teleport(player);
+                    break;
+                case Effects.CuffPlayer:
+                    CuffPlayer(player);
+                    break;
             }
         }
 
@@ -204,6 +213,12 @@ namespace FunnyPills
 
             selectedSpectator.RoleManager.ServerSetRole(player.Role, RoleChangeReason.Revived, spawnFlags);
             selectedSpectator.Teleport(player.Position);
+        }
+
+        private void Teleport(Player player)
+        {
+            player.Broadcast(5, "Tu est vraiment stupide!!");
+            player.Teleport(Room.Random().Position);
         }
 
         private void ApplyAdd5MoveBoostEffect(Player player)
@@ -256,6 +271,13 @@ namespace FunnyPills
                 player.Broadcast(5, "<color=green>You Feel Weaker</color>");
 
             }
+        }
+
+        private void CuffPlayer(Player player)
+        {
+            player.Broadcast(5, "Tu n'as vraiment pas de chance");
+            
+            player.Handcuff();
         }
 
         private void StartTheNuke()
@@ -352,10 +374,12 @@ namespace FunnyPills
             Blackout,
             From,
             To,
-            RandomItem,
+            RandomItem, 
             invisible,
             Dimension106,
-            Inventory
+            Inventory,
+            Teleport,
+            CuffPlayer
         }
     }
 }
