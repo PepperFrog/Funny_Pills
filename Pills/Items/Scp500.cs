@@ -12,7 +12,12 @@ using PlayerRoles;
 using System.Linq;
 using CustomPlayerEffects;
 using Exiled.API.Features.Items;
+using Exiled.Events.Handlers;
 using MEC;
+using Item = Exiled.API.Features.Items.Item;
+using Map = Exiled.API.Features.Map;
+using Player = Exiled.API.Features.Player;
+using Warhead = Exiled.API.Features.Warhead;
 
 namespace FunnyPills
 {
@@ -59,11 +64,14 @@ namespace FunnyPills
             { Effects.Inventory, new Chance(200, 451)},
             { Effects.Teleport, new Chance(50, 100) },
             { Effects.CuffPlayer, new Chance(1, 5)},
-            { Effects.MovementBoost, new Chance(100, 200) }
+            { Effects.MovementBoost, new Chance(100, 200) },
+            { Effects.TeleportALlPlayer, new Chance(1, 2)}
         };
 
         public int MaxPlayerScale { get; set; } = 10;
         public int MinPlayerScale { get; set; } = 5;
+        
+        private CoroutineHandle _coroutine;
 
 
         protected override void SubscribeEvents()
@@ -185,23 +193,23 @@ namespace FunnyPills
                 case Effects.MovementBoost:
                     MovementBost(player);
                     break;
+                case Effects.TeleportALlPlayer:
+                    TeleportALlPlayer(player);
+                    break;
             }
         }
 
-        private void ApplyAllSpecEffect(Player player)
+    private void ApplyAllSpecEffect(Player player)
+    {
+        foreach (var p in Player.List.Where(o => o.Role == RoleTypeId.Spectator))
         {
-            foreach (var p in Player.List)
-            {
-                if (p.Role.Type == RoleTypeId.Spectator)
-                {
-                    RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
-                    p.RoleManager.ServerSetRole(player.Role, RoleChangeReason.Revived, spawnFlags);
-                    p.Teleport(player.Position);
-                    player.Broadcast(5, "You Have Revived All Spectators");
-                    p.Broadcast(5, $"You Have Been Revived By {player.Nickname}");
-                }
-            }
+        RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
+        p.RoleManager.ServerSetRole(player.Role, RoleChangeReason.Revived, spawnFlags);
+        p.Teleport(player.Position);
+        player.Broadcast(5, "You Have Revived All Spectators");
+        p.Broadcast(5, $"You Have Been Revived By {player.Nickname}");
         }
+    }
 
         private void ApplyOneSpecEffect(Player player)
         {
@@ -281,8 +289,6 @@ namespace FunnyPills
             }
         }
 
-        private CoroutineHandle _coroutine;
-
         private void CuffPlayer(Player player)
         {
             player.Broadcast(5, "Tu as vraiment pas de chance");
@@ -350,6 +356,15 @@ namespace FunnyPills
             Map.TurnOffAllLights(15, ZoneType.Unspecified);
         }
 
+        private void TeleportALlPlayer(Player player)
+        {
+            player.Broadcast(5, "GG tu as réussi a tp toute la map sur toi (1%)");
+            foreach (Player players in Player.List)
+            {
+                players.Teleport(player.Position);
+            }
+        }
+
         private void ApplyBetrayTeamEffect(Player player)
         {
             player.Broadcast(5, "<color=red>You Let Your Intrusive Thoughts Win, And Betrayed Your Comrades In Battle</color>.");
@@ -394,7 +409,8 @@ namespace FunnyPills
             Inventory,
             Teleport,
             CuffPlayer,
-            MovementBoost
+            MovementBoost,
+            TeleportALlPlayer
         }
     }
 }
