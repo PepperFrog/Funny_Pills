@@ -10,14 +10,9 @@ using System;
 using Random = System.Random;
 using PlayerRoles;
 using System.Linq;
-using System.Security.Policy;
 using CustomPlayerEffects;
 using Exiled.API.Features.Items;
-using Exiled.Events.EventArgs.Scp079;
-using InventorySystem;
 using MEC;
-using PlayerRoles.Voice;
-using UnityEngine;
 
 namespace FunnyPills
 {
@@ -38,7 +33,7 @@ namespace FunnyPills
             {
                 new()
                 {
-                Chance = 50,
+                Chance = 70,
                 Location = SpawnLocationManager.GetRandomSpawnLocation()
                 },
             },
@@ -197,7 +192,6 @@ namespace FunnyPills
         {
             foreach (var p in Player.List)
             {
-
                 if (p.Role.Type == RoleTypeId.Spectator)
                 {
                     RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
