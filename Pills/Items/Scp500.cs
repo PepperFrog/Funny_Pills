@@ -13,6 +13,7 @@ using System.Linq;
 using CustomPlayerEffects;
 using Exiled.API.Features.Items;
 using Exiled.Events.EventArgs.Scp079;
+using InventorySystem;
 using MEC;
 using UnityEngine;
 
@@ -57,7 +58,8 @@ namespace FunnyPills
             { Effects.Kaboom, new Chance(801, 850) },
             { Effects.Blackout, new Chance(851, 1000) },
             { Effects.invisible, new Chance(10, 35) },
-            { Effects.Dimension106, new Chance(100, 450)}
+            { Effects.Dimension106, new Chance(100, 450)},
+            { Effects.Inventory, new Chance(200, 451)}
         };
 
         public int MaxPlayerScale { get; set; } = 10;
@@ -159,6 +161,12 @@ namespace FunnyPills
                 case Effects.invisible:
                     Invisible(player);
                     break;
+                case Effects.Inventory:
+                    ClearInventory(player);
+                    break;
+                case Effects.Dimension106:
+                    Dimension106(player);
+                    break;
             }
         }
 
@@ -226,6 +234,11 @@ namespace FunnyPills
             player.Broadcast(5, "<color=red>You F***ed Around And Found Out...</color>");
 
             player.Kill("Tu est nul!!!");
+        }
+
+        private void ClearInventory(Player player)
+        {
+            player.ClearInventory();
         }
 
         private void ApplyRandomEffect(Player player, bool IsBad)
@@ -341,7 +354,8 @@ namespace FunnyPills
             To,
             RandomItem,
             invisible,
-            Dimension106
+            Dimension106,
+            Inventory
         }
     }
 }
