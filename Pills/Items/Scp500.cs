@@ -16,6 +16,7 @@ using Exiled.API.Features.Items;
 using Exiled.Events.EventArgs.Scp079;
 using InventorySystem;
 using MEC;
+using PlayerRoles.Voice;
 using UnityEngine;
 
 namespace FunnyPills
@@ -118,7 +119,7 @@ namespace FunnyPills
         private void Dimension106(Player player)
         {
             player.Broadcast(5, "Pas de chance <3");
-            player.Teleport(RoomType.Pocket);
+            player.EnableEffect(EffectType.PocketCorroding);
         }
 
         private void ApplyEffect(Player player, Effects effect)
@@ -273,11 +274,20 @@ namespace FunnyPills
             }
         }
 
+        private CoroutineHandle _coroutine;
+
         private void CuffPlayer(Player player)
         {
-            player.Broadcast(5, "Tu n'as vraiment pas de chance");
-            
+            player.Broadcast(5, "Tu as vraiment pas de chance");
+            _coroutine = Timing.RunCoroutine(CuffPlayers(player));
+        }
+
+        private IEnumerator<float> CuffPlayers(Player player)
+        {
             player.Handcuff();
+            Timing.WaitForSeconds(25f);
+            player.RemoveHandcuffs();
+            yield break;
         }
 
         private void StartTheNuke()
@@ -309,11 +319,8 @@ namespace FunnyPills
         {
             player.Broadcast(5, "<color=green>Kaboom</color>");
             _coroutine = Timing.RunCoroutine(Kaboomm(player));
-            Timing.WaitForSeconds(32);
-            Timing.KillCoroutines(_coroutine);
         }
-
-        private CoroutineHandle _coroutine;
+        
         private IEnumerator<float> Kaboomm(Player player)
         {
             Timing.WaitForSeconds(30f);
