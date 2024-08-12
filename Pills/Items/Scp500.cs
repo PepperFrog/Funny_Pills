@@ -21,7 +21,7 @@ namespace FunnyPills
     [CustomItem(ItemType.SCP500)]
     public class Scp500 : CustomItem
     {
-        public override uint Id { get; set; } = 1;
+        public override uint Id { get; set; } = 500;
 
         public override string Name { get; set; } = "Funny Pills";
         public override string Description { get; set; } = "Do Something Fun When Eaten";
@@ -56,7 +56,8 @@ namespace FunnyPills
             { Effects.SizeChange, new Chance(701, 800) },
             { Effects.Kaboom, new Chance(801, 850) },
             { Effects.Blackout, new Chance(851, 1000) },
-            { Effects.invisible, new Chance(10, 35) }
+            { Effects.invisible, new Chance(10, 35) },
+            { Effects.Dimension106, new Chance(100, 450)}
         };
 
         public int MaxPlayerScale { get; set; } = 10;
@@ -107,6 +108,12 @@ namespace FunnyPills
                     }
                 }
             }
+        }
+
+        private void Dimension106(Player player)
+        {
+            player.Broadcast(5, "Pas de chance <3");
+            player.Teleport(RoomType.Pocket);
         }
 
         private void ApplyEffect(Player player, Effects effect)
@@ -218,7 +225,7 @@ namespace FunnyPills
         {
             player.Broadcast(5, "<color=red>You F***ed Around And Found Out...</color>");
 
-            player.Vaporize(player);
+            player.Kill("Tu est nul!!!");
         }
 
         private void ApplyRandomEffect(Player player, bool IsBad)
@@ -333,7 +340,8 @@ namespace FunnyPills
             From,
             To,
             RandomItem,
-            invisible
+            invisible,
+            Dimension106
         }
     }
 }
