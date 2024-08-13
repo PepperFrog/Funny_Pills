@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b21788e8-66d7-47c3-8ade-f9a4391e604f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Pills/Funny_Pills.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pills/Funny_Pills.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Funny_Pills/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Funny_Pills/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pills/Items/Scp500.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pills/Items/Scp500.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,12 +22,12 @@
     &quot;assignee&quot;: &quot;RomzyyTV&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/PepperFrog/Funny_Pills.git&quot;,
-    &quot;accountId&quot;: &quot;b2e7d500-164a-4e8c-8870-5e5ad63e6626&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/PepperFrog/Funny_Pills.git",
+    "accountId": "51b40bf0-fee4-4059-b183-ff1a3273aa35"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="Toolset" />
   </component>
@@ -42,19 +43,20 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "dev",
+    "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "vcs.Git",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "rider.external.source.directories": [
-      "C:\\Users\\gabri\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
-      "C:\\Users\\gabri\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
-      "C:\\Users\\gabri\\AppData\\Local\\Symbols\\src"
+      "C:\\Users\\maell\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\maell\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\maell\\AppData\\Local\\Symbols\\src"
     ]
   }
 }]]></component>
@@ -80,6 +82,7 @@
       <updated>1723407005998</updated>
       <workItem from="1723407007344" duration="2162000" />
       <workItem from="1723452708188" duration="15000" />
+      <workItem from="1723509094469" duration="4209000" />
     </task>
     <servers />
   </component>

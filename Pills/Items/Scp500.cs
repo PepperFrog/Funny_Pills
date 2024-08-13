@@ -65,7 +65,8 @@ namespace FunnyPills
             { Effects.Teleport, new Chance(50, 100) },
             { Effects.CuffPlayer, new Chance(1, 5)},
             { Effects.MovementBoost, new Chance(100, 200) },
-            { Effects.TeleportALlPlayer, new Chance(1, 2)}
+            { Effects.TeleportALlPlayer, new Chance(50, 100)},
+            { Effects.TeleportToSCP, new Chance(100, 350)}
         };
 
         public int MaxPlayerScale { get; set; } = 10;
@@ -196,6 +197,9 @@ namespace FunnyPills
                 case Effects.TeleportALlPlayer:
                     TeleportALlPlayer(player);
                     break;
+                case Effects.TeleportToSCP:
+                    TeleportToSCP(player);
+                    break;
             }
         }
 
@@ -278,8 +282,6 @@ namespace FunnyPills
             {
                 player.ApplyRandomEffect(EffectCategory.Positive, 255, 90);
                 player.Broadcast(5, "<color=green>You Feel Stronger</color>");
-
-
             }
             else if (IsBad)
             {
@@ -365,6 +367,22 @@ namespace FunnyPills
             }
         }
 
+        private void TeleportToSCP(Player player)
+        {
+            var ScpIsalive = Player.List.Where(p => Team.SCPs == Team.SCPs && p.IsAlive).OrderBy(_ => UnityEngine.Random.value).FirstOrDefault();
+
+            if (ScpIsalive != null)
+            {
+                player.Teleport(ScpIsalive.Position);
+                player.Broadcast(5, "Tu a vraiment pas de chance" +
+                                    "");
+            }
+            else
+            {
+                player.Broadcast(5, "Aucun scp trouvé");
+            }
+        }
+
         private void ApplyBetrayTeamEffect(Player player)
         {
             player.Broadcast(5, "<color=red>You Let Your Intrusive Thoughts Win, And Betrayed Your Comrades In Battle</color>.");
@@ -410,7 +428,8 @@ namespace FunnyPills
             Teleport,
             CuffPlayer,
             MovementBoost,
-            TeleportALlPlayer
+            TeleportALlPlayer,
+            TeleportToSCP
         }
     }
 }
