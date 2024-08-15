@@ -348,7 +348,7 @@ namespace FunnyPills
 
         private void Invisible(Player player)
         {
-            player.Broadcast(5, "Tu a de la chance");
+            player.Broadcast(5, "Tu as de la chance");
 
             player.EnableEffect(EffectType.Invisible, 1 , 15f);
         }
@@ -374,8 +374,7 @@ namespace FunnyPills
             if (ScpIsalive != null)
             {
                 player.Teleport(ScpIsalive.Position);
-                player.Broadcast(5, "Tu a vraiment pas de chance" +
-                                    "");
+                player.Broadcast(5, "Tu as vraiment pas de chance");
             }
             else
             {
