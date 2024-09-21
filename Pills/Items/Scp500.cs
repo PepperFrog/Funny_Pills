@@ -272,7 +272,7 @@ namespace FunnyPills
         private void ApplyBetrayTeamEffect(Player player)
         {
             player.Broadcast(5, "<color=red>You Let Your Intrusive Thoughts Win, And Betrayed Your Comrades In Battle</color>.");
-            if (player.Role == RoleTypeId.NtfCaptain || player.Role == RoleTypeId.NtfSergeant || player.Role == RoleTypeId.NtfPrivate || player.Role == RoleTypeId.NtfSpecialist)
+            if (player.Role == RoleTypeId.NtfCaptain || player.Role == RoleTypeId.NtfSergeant || player.Role == RoleTypeId.NtfPrivate || player.Role == RoleTypeId.NtfSpecialist || player.Role == RoleTypeId.FacilityGuard)
             {
                 player.RoleManager.ServerSetRole(RoleTypeId.ChaosConscript, RoleChangeReason.Revived, RoleSpawnFlags.None);
             }
