@@ -24,7 +24,7 @@ namespace FunnyPills
 
         public override float Weight { get; set; }
 
-        public override SpawnProperties? SpawnProperties { get; set; } = new()
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 50,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
@@ -41,7 +41,7 @@ namespace FunnyPills
         public Dictionary<Effects, Chance> EffectChances { get; set; } = new Dictionary<Effects, Chance>
         {
             { Effects.StartTheFuckingNuke, new Chance(1, 10)},
-            { Effects.ReplaceInventory, new Chance(11, 50) },
+            { Effects.ReplaceInventory, new Chance(0, 0) },
             { Effects.AddRandomGoodEffect, new Chance(51, 150) },
             { Effects.AddRandomBadEffect, new Chance(151, 300) },
             { Effects.Die, new Chance(301, 350) },
@@ -249,7 +249,7 @@ namespace FunnyPills
         private void ChangePlayerSize(Player player)
         {
             Random random = new Random();
-            var newScale = random.Next(MinPlayerScale, MaxPlayerScale)/10;
+            float newScale = (float)random.Next(MinPlayerScale, MaxPlayerScale)/10.0f;
             player.Scale = new UnityEngine.Vector3(newScale, newScale, newScale);
             string sizeMessage = player.Scale.x < 1.0f ? "Shorter" : "Taller";
             player.Broadcast(5, $"<color=green>You Begin To Feel {sizeMessage}</color>");

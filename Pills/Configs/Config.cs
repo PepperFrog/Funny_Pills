@@ -10,7 +10,7 @@ namespace FunnyPills
     public class Config : IConfig
     {
         public bool IsEnabled { get; set; } = true;
-        public bool Debug { get; set; } = true;
+        public bool Debug { get; set; } = false;
         public bool IsItemsEnabled { get; set; } = true;
 
         [YamlIgnore] public Items ItemConfigs { get; private set; } = null!;
