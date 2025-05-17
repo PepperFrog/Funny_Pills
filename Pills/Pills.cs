@@ -12,8 +12,8 @@ namespace FunnyPills
         public override string Name => "Funny Pills";
         public override string Author => "TagGodOnYT";
 
-        public override Version RequiredExiledVersion { get; } = new(9, 5, 0);
-        public override Version Version { get; } = new(1, 4, 2);
+        public override Version RequiredExiledVersion { get; } = new(9, 6, 0);
+        public override Version Version { get; } = new(1, 4, 3);
 
         private ServerHandler serverHandler = null!;
 

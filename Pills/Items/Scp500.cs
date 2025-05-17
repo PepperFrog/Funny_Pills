@@ -115,10 +115,10 @@ namespace FunnyPills
                     ReplacePlayerInventory(player);
                     break;
                 case Effects.AddRandomGoodEffect:
-                    ApplyRandomEffect(player, true);
+                    ApplyRandomEffect(player, false);
                     break;
                 case Effects.AddRandomBadEffect:
-                    ApplyRandomEffect(player, false);
+                    ApplyRandomEffect(player, true);
                     break;
                 case Effects.Die:
                     ApplyDieEffect(player);
@@ -217,14 +217,14 @@ namespace FunnyPills
         {
             if (!IsBad)
             {
-                player.ApplyRandomEffect(EffectCategory.Positive, 255, 90);
+                player.ApplyRandomEffect(EffectCategory.Positive, 2, 90);
                 player.Broadcast(5, "<color=green>You Feel Stronger</color>");
 
 
             }
             else if (IsBad)
             {
-                player.ApplyRandomEffect(EffectCategory.Negative, 255, 90);
+                player.ApplyRandomEffect(EffectCategory.Negative, 2, 90);
                 player.Broadcast(5, "<color=green>You Feel Weaker</color>");
 
             }
