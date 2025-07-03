@@ -275,10 +275,12 @@ namespace FunnyPills
             if (player.Role == RoleTypeId.NtfCaptain || player.Role == RoleTypeId.NtfSergeant || player.Role == RoleTypeId.NtfPrivate || player.Role == RoleTypeId.NtfSpecialist || player.Role == RoleTypeId.FacilityGuard)
             {
                 player.RoleManager.ServerSetRole(RoleTypeId.ChaosConscript, RoleChangeReason.Revived, RoleSpawnFlags.None);
+                player.DisableEffect<SpawnProtected>();
             }
             else if (player.Role == RoleTypeId.ChaosRepressor || player.Role == RoleTypeId.ChaosRifleman || player.Role == RoleTypeId.ChaosConscript || player.Role == RoleTypeId.ChaosMarauder)
             {
                 player.RoleManager.ServerSetRole(RoleTypeId.NtfSpecialist, RoleChangeReason.Revived, RoleSpawnFlags.None);
+                player.DisableEffect<SpawnProtected>();
             }
             else if (player.Role == RoleTypeId.ClassD)
             {
