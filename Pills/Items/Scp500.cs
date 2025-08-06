@@ -12,6 +12,7 @@ using PlayerRoles;
 using System.Linq;
 using CustomPlayerEffects;
 using Exiled.API.Features.Items;
+
 namespace FunnyPills
 {
     [CustomItem(ItemType.SCP500)]
@@ -31,16 +32,17 @@ namespace FunnyPills
             {
                 new()
                 {
-                Chance = 50,
-                Location = SpawnLocationManager.GetRandomSpawnLocation()
+                    Chance = 50,
+                    Location = SpawnLocationManager.GetRandomSpawnLocation()
                 },
             },
         };
+
         public bool AffecAll500s { get; set; } = false;
 
         public Dictionary<Effects, Chance> EffectChances { get; set; } = new Dictionary<Effects, Chance>
         {
-            { Effects.StartTheFuckingNuke, new Chance(1, 10)},
+            { Effects.StartTheFuckingNuke, new Chance(1, 10) },
             { Effects.ReplaceInventory, new Chance(0, 0) },
             { Effects.AddRandomGoodEffect, new Chance(51, 150) },
             { Effects.AddRandomBadEffect, new Chance(151, 300) },
@@ -66,8 +68,7 @@ namespace FunnyPills
             base.SubscribeEvents();
         }
 
-        [YamlIgnore]
-        private Player _player;
+        [YamlIgnore] private Player _player;
 
         protected override void UnsubscribeEvents()
         {
@@ -81,6 +82,7 @@ namespace FunnyPills
         {
             _player = ev.Player;
         }
+
         protected void OnUsedItem(UsedItemEventArgs ev)
         {
             if (Check(ev.Item) || AffecAll500s)
@@ -149,9 +151,9 @@ namespace FunnyPills
 
         private void ApplyAllSpecEffect(Player player)
         {
+            int count = 0;
             foreach (var p in Player.List)
             {
-
                 if (p.Role.Type == RoleTypeId.Spectator)
                 {
                     RoleSpawnFlags spawnFlags = RoleSpawnFlags.AssignInventory;
@@ -159,17 +161,25 @@ namespace FunnyPills
                     p.Teleport(player.Position);
                     player.Broadcast(5, "You Have Revived All Spectators");
                     p.Broadcast(5, $"You Have Been Revived By {player.Nickname}");
+                    count++;
                 }
+            }
+
+            if (count == 0)
+            {
+                ApplyRandomEffect(player, false);
             }
         }
 
         private void ApplyOneSpecEffect(Player player)
         {
-            var spectators = Player.List.Where(p => p.Role.Type == RoleTypeId.Spectator).ToList();
+            List<Player> spectators = Player.List.Where(p => p.Role.Type == RoleTypeId.Spectator).ToList();
 
             if (spectators.Count == 0)
             {
-                Log.Warn("No Spectators To Revive");
+                Log.Debug("No Spectators To Revive");
+                ApplyRandomEffect(player, false);
+                return;
             }
 
             var random = new System.Random();
@@ -219,14 +229,11 @@ namespace FunnyPills
             {
                 player.ApplyRandomEffect(EffectCategory.Positive, 2, 90);
                 player.Broadcast(5, "<color=green>You Feel Stronger</color>");
-
-
             }
             else if (IsBad)
             {
                 player.ApplyRandomEffect(EffectCategory.Negative, 2, 90);
                 player.Broadcast(5, "<color=green>You Feel Weaker</color>");
-
             }
         }
 
@@ -249,7 +256,7 @@ namespace FunnyPills
         private void ChangePlayerSize(Player player)
         {
             Random random = new Random();
-            float newScale = (float)random.Next(MinPlayerScale, MaxPlayerScale)/10.0f;
+            float newScale = (float)random.Next(MinPlayerScale, MaxPlayerScale) / 10.0f;
             player.Scale = new UnityEngine.Vector3(newScale, newScale, newScale);
             string sizeMessage = player.Scale.x < 1.0f ? "Shorter" : "Taller";
             player.Broadcast(5, $"<color=green>You Begin To Feel {sizeMessage}</color>");
@@ -271,15 +278,21 @@ namespace FunnyPills
 
         private void ApplyBetrayTeamEffect(Player player)
         {
-            player.Broadcast(5, "<color=red>You Let Your Intrusive Thoughts Win, And Betrayed Your Comrades In Battle</color>.");
-            if (player.Role == RoleTypeId.NtfCaptain || player.Role == RoleTypeId.NtfSergeant || player.Role == RoleTypeId.NtfPrivate || player.Role == RoleTypeId.NtfSpecialist || player.Role == RoleTypeId.FacilityGuard)
+            player.Broadcast(5,
+                "<color=red>You Let Your Intrusive Thoughts Win, And Betrayed Your Comrades In Battle</color>.");
+            if (player.Role == RoleTypeId.NtfCaptain || player.Role == RoleTypeId.NtfSergeant ||
+                player.Role == RoleTypeId.NtfPrivate || player.Role == RoleTypeId.NtfSpecialist ||
+                player.Role == RoleTypeId.FacilityGuard)
             {
-                player.RoleManager.ServerSetRole(RoleTypeId.ChaosConscript, RoleChangeReason.Revived, RoleSpawnFlags.None);
+                player.RoleManager.ServerSetRole(RoleTypeId.ChaosConscript, RoleChangeReason.Revived,
+                    RoleSpawnFlags.None);
                 player.DisableEffect<SpawnProtected>();
             }
-            else if (player.Role == RoleTypeId.ChaosRepressor || player.Role == RoleTypeId.ChaosRifleman || player.Role == RoleTypeId.ChaosConscript || player.Role == RoleTypeId.ChaosMarauder)
+            else if (player.Role == RoleTypeId.ChaosRepressor || player.Role == RoleTypeId.ChaosRifleman ||
+                     player.Role == RoleTypeId.ChaosConscript || player.Role == RoleTypeId.ChaosMarauder)
             {
-                player.RoleManager.ServerSetRole(RoleTypeId.NtfSpecialist, RoleChangeReason.Revived, RoleSpawnFlags.None);
+                player.RoleManager.ServerSetRole(RoleTypeId.NtfSpecialist, RoleChangeReason.Revived,
+                    RoleSpawnFlags.None);
                 player.DisableEffect<SpawnProtected>();
             }
             else if (player.Role == RoleTypeId.ClassD)
